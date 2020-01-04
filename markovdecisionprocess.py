@@ -3,6 +3,6 @@ import numpy as np
 
 class MarkovDecisionProcess:
 
-    def __init__(self, state_count):
-        self.state_count = state_count
-        self.states = np.array(self.state_count)
+    def __init__(self, states_count):
+        self.states_count = states_count
+        self.states = np.ndarray(self.states_count)
