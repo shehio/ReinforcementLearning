@@ -3,6 +3,11 @@ import numpy as np
 
 class MarkovDecisionProcess:
 
-    def __init__(self, states_count):
-        self.states_count = states_count
-        self.states = np.ndarray(self.states_count)
+    def __init__(self, states):
+        self.states = states
+        self.states_count = self.states.size
+
+    # This might not be very efficient.
+    def add_state(self, state):
+        self.states = np.append(self.states, state)
+        self.states_count = self.states.size
