@@ -1,9 +1,22 @@
+import pytest
 import action as action_module
+import state as state_module
+
+reward = 5
+state = state_module.State('state', 0)
+action = action_module.Action(reward, state)
 
 
-# Is none a valid to state?
+def test_init_with_null():
+    with pytest.raises(AssertionError):
+        action_module.Action(reward, None)
+
+
 def test_init():
-    reward = 5
-    action = action_module.Action(reward, None)
     assert reward == action.reward
-    assert None is action.to
+    assert state is action.to
+
+
+def test_print():
+    assert reward == action.reward
+    assert 'Reward: 5 to state: state.' == action.__repr__()
