@@ -1,6 +1,5 @@
 import pytest
-import action as action_module
-import state as state_module
+from src import action as action_module, state as state_module
 
 reward = 5
 state = state_module.State('state', 0)

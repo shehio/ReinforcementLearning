@@ -1,5 +1,4 @@
-import state as state_module
-import action as action_module
+from src import action as action_module, state as state_module
 
 initial_value = 0
 state_name = 'state'

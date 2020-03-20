@@ -1,6 +1,4 @@
-import markovdecisionprocess as mdp_module
-import state as state_module
-import action as action_module
+from src import action as action_module, state as state_module, markovdecisionprocess as mdp_module
 import numpy as np
 
 
