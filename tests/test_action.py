@@ -1,5 +1,5 @@
 import pytest
-from src import action as action_module, state as state_module
+from src.building_blocks import action as action_module, state as state_module
 
 reward = 5
 state = state_module.State('state', 0)

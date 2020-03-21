@@ -1,4 +1,4 @@
-from src import action as action_module, state as state_module, markovdecisionprocess as mdp_module
+from src.building_blocks import action as action_module, state as state_module, markovdecisionprocess as mdp_module
 import numpy as np
 
 
