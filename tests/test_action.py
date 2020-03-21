@@ -25,4 +25,4 @@ def test_init():
 
 def test_print():
     assert reward == action.reward
-    assert 'Reward: 5 to state: state.' == action.__repr__()
+    assert 'Reward: 5 to state: state with probability: 1.' == action.__repr__()

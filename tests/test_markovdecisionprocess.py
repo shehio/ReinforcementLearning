@@ -38,10 +38,7 @@ def test_print():  # TODO: Test other combinations
     mdp.add_state(state2)
 
     assert mdp.__repr__() == 'Actions from state state 0:\n' + \
-        'Reward: 5 to state: state 1.\n' + \
+        'Reward: 5 to state: state 1 with probability: 1.\n' + \
         'There are no actions from state state 1.\n' + \
         'Actions from state state 2:\n' + \
-        'Reward: 5 to state: state 1.\n'
-
-
-test_print()
+        'Reward: 5 to state: state 1 with probability: 1.\n'
