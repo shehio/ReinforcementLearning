@@ -6,9 +6,15 @@ state = state_module.State('state', 0)
 action = action_module.Action(reward, state)
 
 
-def test_init_with_null():
+def test_init_with_null_reward():
     with pytest.raises(TypeError) as exception:
         action_module.Action(None, None)
+    assert "Reward has to be a number." == str(exception.value)
+
+
+def test_init_with_non_number_reward():
+    with pytest.raises(TypeError) as exception:
+        action_module.Action("invalid", None)
     assert "Reward has to be a number." == str(exception.value)
 
 

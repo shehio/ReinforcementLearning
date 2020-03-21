@@ -1,7 +1,32 @@
+import pytest
 from src import action as action_module, state as state_module
 
 initial_value = 0
 state_name = 'state'
+
+
+def test_init_with_null_name():
+    with pytest.raises(TypeError) as exception:
+        state_module.State(None, initial_value)
+    assert "Name has to be a string." == str(exception.value)
+
+
+def test_init_with_non_string_name():
+    with pytest.raises(TypeError) as exception:
+        state_module.State(23, initial_value)
+    assert "Name has to be a string." == str(exception.value)
+
+
+def test_init_with_null_value():
+    with pytest.raises(TypeError) as exception:
+        state_module.State(state_name, None)
+    assert "Value has to be a number." == str(exception.value)
+
+
+def test_init_with_non_number_value():
+    with pytest.raises(TypeError) as exception:
+        state_module.State(state_name, "invalid")
+    assert "Value has to be a number." == str(exception.value)
 
 
 def test_init():

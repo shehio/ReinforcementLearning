@@ -6,10 +6,6 @@ class StateFactory:
 
     @staticmethod
     def create_state(name, value):
-        if not isinstance(name, str):
-            raise TypeError("Name has to be a string.")
-        if not isinstance(value, (int, float)):
-            raise TypeError("Value has to be a number.")
         return State(name, value)
 
     @staticmethod

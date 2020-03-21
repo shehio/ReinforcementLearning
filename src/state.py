@@ -4,6 +4,10 @@ import numpy as np
 class State:
 
     def __init__(self, name, value):
+        if not isinstance(name, str):
+            raise TypeError("Name has to be a string.")
+        if not isinstance(value, (int, float)):
+            raise TypeError("Value has to be a number.")
         self.name = name
         self.value = value
         self.actions = np.ndarray((0, ))
