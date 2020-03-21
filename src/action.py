@@ -1,11 +1,8 @@
-from .state import State
-
 class Action:
 
     def __init__(self, reward, to):
-        if not isinstance(to, State):
-            raise TypeError("'to' has to be a state.")
-        assert to is not None  # TODO: Throw a more specific error
+        if not isinstance(reward, (int, float)):
+            raise TypeError("Reward has to be a number.")
         self.reward = reward
         self.to = to
 
