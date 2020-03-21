@@ -7,8 +7,9 @@ action = action_module.Action(reward, state)
 
 
 def test_init_with_null():
-    with pytest.raises(AssertionError):
+    with pytest.raises(TypeError) as exception:
         action_module.Action(reward, None)
+    assert "'to' has to be a state." == str(exception.value)
 
 
 def test_init():
