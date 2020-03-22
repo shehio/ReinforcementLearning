@@ -6,8 +6,8 @@ class ProbabilisticAction:
 
     def __init__(self, rewards, probabilities, states):
         self.__validate_input(rewards, probabilities, states)  # The state checks is delegated to the state factory
-        self.cdf = __create_cdf(probabilities)
-        self.__create_derived_actions(rewards, probabilities, states)
+        self.cdf = self.__create_cdf(probabilities)
+        self.actions =  self.__create_derived_actions(rewards, probabilities, states)
 
     def get_action(self):
          rand = random.uniform(0, 1)
@@ -25,7 +25,7 @@ class ProbabilisticAction:
         if not isinstance(rewards, np.ndarray):
             raise TypeError("Rewards array has to be an ndarray.")
         # https://stackoverflow.com/questions/26921836/correct-way-to-test-for-numpy-dtype
-        if not(rewards.dtype in (np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
+        if not(rewards.dtype in (int, float, np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
             raise TypeError("The dtype of rewards array has to be an np numerical type.")
         if rewards.size == 0:
             raise ValueError("Rewards array can't be empty.")
@@ -33,7 +33,7 @@ class ProbabilisticAction:
     def __validate_probabilities(self, probabilities):
         if not isinstance(probabilities, np.ndarray):
             raise TypeError("Probabilities array has to be an ndarray.")
-        if not(probabilities.dtype in (np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
+        if not(probabilities.dtype in (int, float, np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
             raise TypeError("The dtype of probabilities array has to be an np numerical type.")
         if probabilities.size == 0:
             raise ValueError("Probabilities array can't be empty.")
@@ -41,13 +41,12 @@ class ProbabilisticAction:
             raise ValueError("The sample space probabilities have to sum to 1.0.")
 
     def __create_derived_actions(self, rewards, probabilities, states):
-        self.actions = np.ndarray(rewards.shape[0], dtype=Action)
-        self.action = map(__create_action, rewards, probabilities, states)
+        return np.asarray(list(map(self.__create_action, rewards, probabilities, states)))
 
-    def __create_action(reward, probability, state):
+    def __create_action(self, reward, probability, state):
         return Action(reward, state, probability)
 
-    def __create_cdf(probabilities):
+    def __create_cdf(self, probabilities):
         return np.cumsum(probabilities)
 
     def __repr__(self):
