@@ -3,7 +3,7 @@ import numpy as np
 
 class State:
 
-    def __init__(self, name, value):
+    def __init__(self, name, value=0):
         if not isinstance(name, str):
             raise TypeError("Name has to be a string.")
         if not isinstance(value, (int, float)):
@@ -12,7 +12,7 @@ class State:
         self.value = value
         self.actions = np.ndarray((0, ))
 
-    def add_action(self, action):
+    def add_action(self, action):  # Note that it could be a probabilistic action too.
         self.actions = np.append(self.actions, action)
 
     def __repr__(self):

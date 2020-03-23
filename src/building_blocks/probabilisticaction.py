@@ -5,13 +5,12 @@ from .action import Action
 class ProbabilisticAction:
 
     def __init__(self, rewards, probabilities, states):
-        self.__validate_input(rewards, probabilities, states)  # The state checks is delegated to the state factory
+        self.__validate_input(rewards, probabilities, states)  # Todo: Validate states here too.
         self.cdf = self.__create_cdf(probabilities)
         self.actions =  self.__create_derived_actions(rewards, probabilities, states)
 
-    def get_action(self):
-         rand = random.uniform(0, 1)
-         return self.actions[bisect_left(self.cdf, rand)]
+    def get_action(self): # Try a simpler implementation: return np.random.choice(self.actions, self.probabilities)
+         return self.actions[bisect_left(self.cdf, random.uniform(0, 1))]
 
     def __validate_input(self, rewards, probabilities, states): # Todo: add uniqueness of states test?
         self.__validate_rewards(rewards)
@@ -48,9 +47,6 @@ class ProbabilisticAction:
 
     def __create_cdf(self, probabilities):
         return np.cumsum(probabilities)
-
-    def __repr__(self):
-        return f'Reward: {self.reward} to state: {self.to.name}.'
 
     def __repr__(self):
         returned_string = ''
