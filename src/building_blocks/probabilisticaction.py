@@ -52,7 +52,7 @@ class ProbabilisticAction:
         returned_string = ''
         returned_string += f'Actions included in this ProbabilisticAction:\n'
         for action in self.actions:
-            returned_string += repr(action)
+            returned_string += repr(action) + " "
         returned_string += '\n'
 
         return returned_string
