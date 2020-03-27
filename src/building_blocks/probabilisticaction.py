@@ -4,15 +4,18 @@ from .action import Action
 
 class ProbabilisticAction:
 
-    def __init__(self, rewards, probabilities, states):
-        self.__validate_input(rewards, probabilities, states)  # Todo: Validate states here too.
+    def __init__(self, name, rewards, probabilities, states):
+        self.__validate_input(name, rewards, probabilities, states)  # Todo: Validate states here too.
+        self.name = name
         self.cdf = self.__create_cdf(probabilities)
         self.actions =  self.__create_derived_actions(rewards, probabilities, states)
 
     def get_action(self): # Try a simpler implementation: return np.random.choice(self.actions, self.probabilities)
          return self.actions[bisect_left(self.cdf, random.uniform(0, 1))]
 
-    def __validate_input(self, rewards, probabilities, states): # Todo: add uniqueness of states test?
+    def __validate_input(self, name, rewards, probabilities, states): # Todo: add uniqueness of states test?
+        if not isinstance(name, str): # @Todo: Add a unit test.
+            raise TypeError("Name has to be of type str.")
         self.__validate_rewards(rewards)
         self.__validate_probabilities(probabilities)
         if not rewards.shape == probabilities.shape:
@@ -50,7 +53,7 @@ class ProbabilisticAction:
 
     def __repr__(self):
         returned_string = ''
-        returned_string += f'Actions included in this ProbabilisticAction:\n'
+        returned_string += f'Actions included in ProbabilisticAction {self.name}:\n'
         for action in self.actions:
             returned_string += repr(action) + " "
         returned_string += '\n'
