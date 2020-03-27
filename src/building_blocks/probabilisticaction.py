@@ -14,7 +14,7 @@ class ProbabilisticAction:
          return self.actions[bisect_left(self.cdf, random.uniform(0, 1))]
 
     def __validate_input(self, name, rewards, probabilities, states): # Todo: add uniqueness of states test?
-        if not isinstance(name, str): # @Todo: Add a unit test.
+        if not isinstance(name, str):
             raise TypeError("Name has to be of type str.")
         self.__validate_rewards(rewards)
         self.__validate_probabilities(probabilities)
@@ -53,7 +53,7 @@ class ProbabilisticAction:
 
     def __repr__(self):
         returned_string = ''
-        returned_string += f'Actions included in ProbabilisticAction {self.name}:\n'
+        returned_string += f'ProbabilisticAction {self.name} consists of actions:\n'
         for action in self.actions:
             returned_string += repr(action) + " "
         returned_string += '\n'

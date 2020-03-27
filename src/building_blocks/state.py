@@ -18,11 +18,11 @@ class State:
     def __repr__(self):
         returned_string = ''
         if self.actions.size == 0:
-            returned_string += f'There are no actions from state {self.name}.\n'
+            returned_string += f'State {self.name} has value of {self.value} and no actions.\n\n'
         else:
-            returned_string += f'Actions from state {self.name}:\n'
-            for action in self.actions:
-                returned_string += repr(action)
-            returned_string += '\n'
+            returned_string += f'State {self.name} has value of {self.value} and actions:\n'
+            for counter, action in enumerate(self.actions):
+                returned_string += f'{str(counter + 1)}. {repr(action)}'
+            returned_string += '\n\n'
 
         return returned_string

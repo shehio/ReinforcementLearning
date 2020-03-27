@@ -73,8 +73,8 @@ class GridWorld:
             np.array(
                 [np.array([state7, state3, state10]),
                  np.array([state6, state3, state10]),
-                 np.array([state3, state7, state6]),
-                 np.array([state10, state7, state6])]))
+                 np.array([state3, state6, state7]),
+                 np.array([state10, state6, state7])]))
 
         GridWorld.__add_state_transitions(
             state7,
