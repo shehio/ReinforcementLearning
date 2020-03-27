@@ -37,8 +37,6 @@ def test_print():  # TODO: Test other combinations
     mdp.add_state(state1)
     mdp.add_state(state2)
 
-    print(mdp)
-
     assert 'State state 0 has value of 0 and actions:\n' + \
         '1. Reward: 5 to state: state 1 with probability: 1.\n\n' + \
         'State state 1 has value of 0 and no actions.\n\n' + \
