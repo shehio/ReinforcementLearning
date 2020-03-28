@@ -13,6 +13,13 @@ class ProbabilisticAction:
     def get_action(self): # Try a simpler implementation: return np.random.choice(self.actions, self.probabilities)
          return self.actions[bisect_left(self.cdf, random.uniform(0, 1))]
 
+    def get_value(self, discount_factor: float):
+        value = 0
+        for oft_action in self.actions:
+            value += oft_action.probability * (oft_action.reward + discount_factor * oft_action.to.value)
+
+        return value
+
     def __validate_input(self, name, rewards, probabilities, states): # Todo: add uniqueness of states test?
         if not isinstance(name, str):
             raise TypeError("Name has to be of type str.")

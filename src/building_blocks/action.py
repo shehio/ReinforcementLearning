@@ -10,5 +10,8 @@ class Action:
         self.to = to
         self.probability = probability
 
+    def get_value(self, discount_factor: float):
+        return self.reward + discount_factor * self.to.update_value
+
     def __repr__(self):
         return f'Reward: {self.reward} to state: {self.to.name} with probability: {self.probability}.'

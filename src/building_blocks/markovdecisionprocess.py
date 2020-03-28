@@ -1,5 +1,7 @@
-import numpy as np
 from .state import State
+from .valuefunction import ValueFunction
+
+import numpy as np
 
 
 class MarkovDecisionProcess:
@@ -18,6 +20,9 @@ class MarkovDecisionProcess:
         if not isinstance(state, State):
             raise TypeError("state has to be of type State.")
         return state in self.states
+
+    def update_values(self, value_function: ValueFunction): # Do we still need the validations with the type hint here?
+        map(lambda state: state.updated_value(value_function.dict[state]), self.states)
 
     def __repr__(self):
         returned_string = ''
