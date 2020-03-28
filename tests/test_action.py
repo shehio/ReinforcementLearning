@@ -1,20 +1,22 @@
+from src.building_blocks.action import Action
+from src.building_blocks.state import State
+
 import pytest
-from src.building_blocks import action as action_module, state as state_module
 
 reward = 5
-state = state_module.State('state', 0)
-action = action_module.Action(reward, state)
+state = State('state', 0)
+action = Action(reward, state)
 
 
 def test_init_with_null_reward():
     with pytest.raises(TypeError) as exception:
-        action_module.Action(None, None)
+        Action(None, None)
     assert "Reward has to be a number." == str(exception.value)
 
 
 def test_init_with_non_number_reward():
     with pytest.raises(TypeError) as exception:
-        action_module.Action("invalid", None)
+        Action("invalid", None)
     assert "Reward has to be a number." == str(exception.value)
 
 

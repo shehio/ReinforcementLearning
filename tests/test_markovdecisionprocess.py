@@ -1,34 +1,36 @@
-from src.building_blocks import action as action_module, state as state_module, markovdecisionprocess as mdp_module
+from src.building_blocks.action import Action
+from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
+from src.building_blocks.state import State
+
 import numpy as np
 
 
 state_count = 0
-states = np.ndarray(state_count, dtype=state_module.State)
+states = np.ndarray(state_count, dtype=State)
 
 
 def test_init():
-    mdp = mdp_module.MarkovDecisionProcess(states)
+    mdp = MarkovDecisionProcess(states)
     assert mdp is not None
-    assert state_count == mdp.states_count
     assert (state_count, ) == mdp.states.shape
     assert states.all() == mdp.states.all()
 
 
 def test_add_state():
-    mdp = mdp_module.MarkovDecisionProcess(states)
-    state = state_module.State('state', 0)
+    mdp = MarkovDecisionProcess(states)
+    state = State('state', 0)
     mdp.add_state(state)
     assert (state_count + 1, ) == mdp.states.shape
     assert state == mdp.states[state_count]
 
 
 def test_print():  # TODO: Test other combinations
-    mdp = mdp_module.MarkovDecisionProcess(states)
-    state0 = state_module.State('state 0', 0)
-    state1 = state_module.State('state 1', 0)
-    state2 = state_module.State('state 2', 0)
+    mdp = MarkovDecisionProcess(states)
+    state0 = State('state 0', 0)
+    state1 = State('state 1', 0)
+    state2 = State('state 2', 0)
 
-    action1 = action_module.Action(5, state1)
+    action1 = Action(5, state1)
 
     state0.add_action(action1)
     state2.add_action(action1)
