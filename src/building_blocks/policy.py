@@ -1,8 +1,8 @@
-import numpy as np
-import random
-
+from .action import Action
 from .markovdecisionprocess import MarkovDecisionProcess
 from .state import State
+
+import random
 
 
 class Policy:
@@ -15,6 +15,8 @@ class Policy:
 
     def update_policy(self, state, action):
         self.__validate_state(state)
+        if not isinstance(action, Action):
+            raise TypeError("action has to be of type Action.")
         self.__dict[state] = action
 
     def get_action(self, state):
