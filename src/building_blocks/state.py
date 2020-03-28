@@ -25,7 +25,7 @@ class State:
             returned_string += f'State {self.name} has an initial value of {self.initial_value} and no actions.\n\n'
         else:
             returned_string += f'State {self.name} has an initial value of {self.initial_value}, ' \
-                               f'an updated value of {self.updated_value} and actions:\n'
+                               f'an updated value of {self.updated_value}, and actions:\n'
             for counter, action in enumerate(self.actions):
                 returned_string += f'{str(counter + 1)}. {repr(action)}'
             returned_string += '\n\n'

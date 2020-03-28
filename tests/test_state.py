@@ -36,7 +36,7 @@ def test_init_with_non_number_value():
 def test_init():
     state = State(state_name, initial_value)
     assert state is not None
-    assert initial_value == state.value
+    assert initial_value == state.initial_value
     assert state_name == state.name
     assert (0, ) == state.actions.shape
 
