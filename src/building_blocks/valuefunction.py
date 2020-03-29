@@ -8,7 +8,7 @@ class ValueFunction:
     def __repr__(self):
         returned_string = ''
 
-        for state in self.__dict.keys():
-            returned_string += f'{state.name} -> {self.__dict[state]}\n'
+        for state in self.dict.keys():
+                returned_string += f'{state.name} -> {self.dict[state]}\n'
 
         return returned_string

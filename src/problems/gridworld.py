@@ -2,7 +2,6 @@ import sys
 sys.path.append("/Users/shehio/Downloads/workspace/RL")
 
 
-from src.building_blocks.state import State
 from src.building_blocks.statefactory import StateFactory
 from src.building_blocks.probabilisticaction import ProbabilisticAction
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
@@ -14,14 +13,22 @@ import numpy as np
 # | state5 | ------ |  state6 | state7  |
 # | state8 | state9 | state10 | state11 |
 # ---------------------------------------
+
+# ---------------------------------------
+# | (0, 0) | (0, 1) |  (0, 2) | (0, 3)  |
+# | (1, 0) | ------ |  (1, 2) | (1, 3)  |
+# | (2, 0) | (2, 1) |  (2, 2) | (2, 3)  |
+# ---------------------------------------
+
 class GridWorld:
 
-    def __init__(self):
-        (state1, state2, state3) = GridWorld.create_default_states(('(0, 0)', '(0, 1)',  '(0, 2)'))
+    @staticmethod
+    def get_game():
+        (state1, state2, state3) = GridWorld.__create_default_states(('(0, 0)', '(0, 1)',  '(0, 2)'))
         state4 = StateFactory.create_state('(0, 3)', 100)
-        (state5, state6) = GridWorld.create_default_states(('(1, 0)', '(1, 2)'))
+        (state5, state6) = GridWorld.__create_default_states(('(1, 0)', '(1, 2)'))
         state7 = StateFactory.create_state('(1, 3)', -100)
-        (state8, state9, state10, state11) = GridWorld.create_default_states(('(2, 0)', '(2, 1)', '(2, 2)', '(2, 3)'))
+        (state8, state9, state10, state11) = GridWorld.__create_default_states(('(2, 0)', '(2, 1)', '(2, 2)', '(2, 3)'))
 
         probabilities = np.array([0.8, 0.1, 0.1])
         rewards = np.array([0, 0, 0])
@@ -77,16 +84,6 @@ class GridWorld:
                  np.array([state10, state6, state7])]))
 
         GridWorld.__add_state_transitions(
-            state7,
-            rewards,
-            probabilities,
-            np.array(
-                [np.array([state7, state4, state11]),
-                 np.array([state6, state4, state11]),
-                 np.array([state4, state7, state6]),
-                 np.array([state11, state7, state6])]))
-
-        GridWorld.__add_state_transitions(
             state8,
             rewards,
             probabilities,
@@ -127,12 +124,12 @@ class GridWorld:
                  np.array([state11, state11, state10])]))
 
         states = np.array([state1, state2, state3, state4, state5, state6, state7, state8, state9, state10, state11])
-        self.mdp = MarkovDecisionProcess(states)
+        mdp = MarkovDecisionProcess(states)
 
-        print(self.mdp)
+        return mdp
 
     @staticmethod
-    def create_default_states(names_list):
+    def __create_default_states(names_list):
         return list(map(StateFactory.create_state, names_list))
 
     @staticmethod
@@ -141,6 +138,3 @@ class GridWorld:
         for (action_name, transition) in zip(action_names, transitions):
             probabilistic_action = ProbabilisticAction(action_name, rewards, probabilities, transition)
             StateFactory.add_action(state, probabilistic_action)
-
-
-GridWorld()

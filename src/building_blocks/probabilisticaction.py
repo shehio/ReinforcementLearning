@@ -16,7 +16,7 @@ class ProbabilisticAction:
     def get_value(self, discount_factor: float):
         value = 0
         for oft_action in self.actions:
-            value += oft_action.probability * (oft_action.reward + discount_factor * oft_action.to.value)
+            value += oft_action.probability * (oft_action.reward + discount_factor * oft_action.to.updated_value)
 
         return value
 
@@ -59,6 +59,9 @@ class ProbabilisticAction:
         return np.cumsum(probabilities)
 
     def __repr__(self):
+        return self.name
+
+    def __str__(self):
         returned_string = ''
         returned_string += f'ProbabilisticAction {self.name} consists of actions:\n'
         for action in self.actions:

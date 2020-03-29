@@ -19,7 +19,13 @@ class State:
     def update_value(self, value: float):
         self.updated_value = value
 
+    def __hash__(self):  # Not a good implementation
+        return hash(self.name)
+
     def __repr__(self):
+        return f'{self.name}: {self.updated_value}\n'
+
+    def __str__(self):
         returned_string = ''
         if self.actions.size == 0:
             returned_string += f'State {self.name} has an initial value of {self.initial_value} and no actions.\n\n'
