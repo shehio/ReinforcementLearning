@@ -26,6 +26,9 @@ class MarkovDecisionProcess:
     def update_values(value_function: ValueFunction):  # Do we still need the validations with the type hint here?
         any(map(lambda state: state.update_value(value_function.dict[state]), value_function.dict.keys()))
 
+    def terminal_states(self):
+        return sum(state.actions.shape == (0,) for state in self.states)
+
     def __repr__(self):
         returned_string = ''
 

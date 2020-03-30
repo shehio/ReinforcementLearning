@@ -14,31 +14,29 @@ class ValueFunctionHelpers:
             raise TypeError("mdp has to be of type MarkovDecisionProcess.")
         return ValueFunction(dict(map(lambda state: (state, state.updated_value), mdp.states)))
 
-    # Fix this API
     @staticmethod  # How to make iterations an int while passing a default value?
     def value_iteration(
             mdp: MarkovDecisionProcess,
             discount_factor: float,
-            epsilon: float,
             iterations: 100,
-            terminal_states: 0):
+            epsilon: 0.05):
         prev_value_function = ValueFunctionHelpers.create_value_function(mdp)
         value_function_diff = float("inf")
 
         i = 0
-        while i <  2: ##iterations or value_function_diff > epsilon:
+        terminal_states = mdp.terminal_states()
+
+        while i < iterations and value_function_diff > epsilon:
             q_function = ValueFunctionHelpers.__evaluate_qvalues(mdp, discount_factor)
-            # print(q_function)
             current_value_function = ValueFunctionHelpers.__get_value_function(q_function)
-            print('================= CURRENT VALUE FUNCTION =================')
-            print(current_value_function)
             value_function_diff = ValueFunctionHelpers.__get_value_function_difference(
                 prev_value_function,
                 current_value_function,
                 terminal_states)  # The first iteration has an extra state. All other states are normalized.
 
             mdp.update_values(current_value_function)
-            print('================= MDP =================')
+            print(f'Iteration: {i}')
+            print('================= Current MDP =================')
             print(mdp)
             prev_value_function = current_value_function
             i = i + 1

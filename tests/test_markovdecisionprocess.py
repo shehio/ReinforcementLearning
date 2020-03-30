@@ -39,8 +39,6 @@ def test_print():  # TODO: Test other combinations
     mdp.add_state(state1)
     mdp.add_state(state2)
 
-    assert 'State state 0 has an initial value of 0, an updated value of 0, and actions:\n' + \
-        '1. Reward: 5 to state: state 1 with probability: 1.\n\n' + \
-        'State state 1 has an initial value of 0 and no actions.\n\n' + \
-        'State state 2 has an initial value of 0, an updated value of 0, and actions:\n' + \
-        '1. Reward: 5 to state: state 1 with probability: 1.\n\n' == mdp.__repr__()
+    assert 'state 0: 0\n' + \
+        'state 1: 0\n' + \
+        'state 2: 0\n' == mdp.__repr__()
