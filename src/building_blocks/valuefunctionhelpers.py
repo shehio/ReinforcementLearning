@@ -1,11 +1,14 @@
 from .markovdecisionprocess import MarkovDecisionProcess
-from .qfunction import QFunction
+from .qfunctionhelpers import QFunctionHelpers
 from .valuefunction import ValueFunction
 
-import functools
 import numpy as np
 
 
+## @Todo: Unify the level of abstraction in this class and in qfunctionhelpers.
+## @Todo: These helpers shouldn't live in the same folder as the basic components: action, state, mdp.
+## @Todo: Rename dict everywhere.
+## @Todo: Have a common interface between action and probabilistic action.
 class ValueFunctionHelpers:
 
     @staticmethod
@@ -22,14 +25,13 @@ class ValueFunctionHelpers:
             epsilon: 0.05):
         prev_value_function = ValueFunctionHelpers.create_value_function(mdp)
         value_function_diff = float("inf")
-
-        i = 0
         terminal_states = mdp.terminal_states()
+        i = 0
 
         while i < iterations and value_function_diff > epsilon:
-            q_function = ValueFunctionHelpers.__evaluate_qvalues(mdp, discount_factor)
-            current_value_function = ValueFunctionHelpers.__get_value_function(q_function)
-            value_function_diff = ValueFunctionHelpers.__get_value_function_difference(
+            q_function = QFunctionHelpers.get_qfunction(mdp, discount_factor)
+            current_value_function = QFunctionHelpers.get_value_function_from_max_qvalue(q_function)
+            value_function_diff = ValueFunctionHelpers.get_value_function_difference(
                 prev_value_function,
                 current_value_function,
                 terminal_states)  # The first iteration has an extra state. All other states are normalized.
@@ -45,56 +47,7 @@ class ValueFunctionHelpers:
         return current_value_function
 
     @staticmethod
-    def __validate_discount_factor(discount_factor):
-        if not isinstance(discount_factor, float):
-            raise TypeError("discount_factor has to be of type float.")
-        if discount_factor > 1:
-            raise ValueError("discount_factor has to be less or equal one.")
-
-    @staticmethod
-    def __get_value_function(q_function: QFunction):
-        return ValueFunction(
-            dict(map(functools.partial(ValueFunctionHelpers.get_value_from_state, q_function.dict),
-                     q_function.dict.keys())))
-
-    @staticmethod
-    def get_value_from_state(qdict, state):
-        values = qdict[state].values()
-        return state, max(qdict[state].values())
-
-    @staticmethod
-    def __evaluate_qvalues(mdp: MarkovDecisionProcess, discount_factor: float):
-        if not isinstance(mdp, MarkovDecisionProcess):
-            raise TypeError("mdp has to be of type MarkovDecisionProcess.")
-        ValueFunctionHelpers.__validate_discount_factor(discount_factor)
-        state_actions = {}
-
-        # Only get the states that have actions. If not, they should neither be added to QFunction or the value function
-        for state in mdp.states:
-            if state.actions.shape > (0,):
-                state_actions[state] = state.actions
-
-        entry_list = list(
-            map(functools.partial(ValueFunctionHelpers.__get_qvalues, discount_factor), state_actions.items()))
-        qdict = {}
-        for entry in entry_list:
-            qdict.update(entry)
-
-        return QFunction(qdict)
-
-    @staticmethod
-    def __get_qvalues(discount_factor: float, state_actions_tuple):
-        state = state_actions_tuple[0]
-        actions = state_actions_tuple[1]
-        state_action_values = {}
-        state_action_values[state] = {}
-        for action in actions:
-            state_action_values[state][action] = action.get_value(discount_factor)
-        # print(state_action_values)
-        return state_action_values
-
-    @staticmethod
-    def __get_value_function_difference(
+    def get_value_function_difference(
             first_value_function: ValueFunction,
             second_value_function: ValueFunction,
             states_without_actions_count: int):

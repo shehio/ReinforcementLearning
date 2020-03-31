@@ -10,8 +10,14 @@ class Policy:
     def __init__(self, mdp):
         if not isinstance(mdp, MarkovDecisionProcess):
             raise TypeError("mdp has to be of type MarkovDecisionProcess.")
-        self.__mdp = mdp
+        self.__mdp = mdp  # @Todo: Do we need a reference of the mdp in here?
         self.__dict = self.__create_random_policy()
+
+    # def __init__(self, mdp, policy_dict):
+    #     if not isinstance(mdp, MarkovDecisionProcess):
+    #         raise TypeError("mdp has to be of type MarkovDecisionProcess.")
+    #     self.__mdp = mdp
+    #     self.__dict = policy_dict
 
     def update_policy(self, state, action):
         self.__validate_state(state)
