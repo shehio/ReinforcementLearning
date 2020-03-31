@@ -16,26 +16,35 @@ class QFunctionHelpers:
         QFunctionHelpers.__validate_discount_factor(discount_factor)
         state_actions = {}
 
-        # Only get the states that have actions. If not, they should neither be added to QFunction or the value function
+        print(mdp)
+
+        # Only get the states that have actions. If not, they should not be added to QFunction.
         for state in mdp.states:
-            if state.actions.shape > (0,):
+            if not state.is_terminal():
                 state_actions[state] = state.actions
 
-        entry_list = list(
-            map(functools.partial(QFunctionHelpers.__get_qvalues, discount_factor), state_actions.items()))
+        entry_list = list(map(
+            functools.partial(QFunctionHelpers.__get_qvalues, discount_factor),
+            state_actions.items()))
+
         qdict = {}
         for entry in entry_list:
             qdict.update(entry)
-
         return QFunction(qdict)
 
-    @staticmethod
-    def get_policy_from_max_qfunction(mdp: MarkovDecisionProcess, q_function: QFunction = None):
+    @staticmethod  # @Todo: Add validations to this method.
+    def get_policy_using_max_qfunction_from_mdp(
+            mdp: MarkovDecisionProcess,
+            discount_factor,
+            q_function: QFunction = None,):
         if q_function is None:
-            q_function = QFunctionHelpers.get_qfunction(mdp)
-        dict = dict(map(functools.partial(QFunctionHelpers.__get_max_value_action_from_state, q_function.dict),
-                     q_function.dict.keys()))
-        return Policy(mdp, dict)
+            # print('went in the if')
+            q_function = QFunctionHelpers.get_qfunction(mdp, discount_factor)
+        # print(q_function)
+        policy_dict = dict(map(
+            functools.partial(QFunctionHelpers.__get_max_value_action_from_state, q_function.dict),
+            q_function.dict.keys()))
+        return Policy(mdp, policy_dict)
 
     @staticmethod
     def get_value_function_from_max_qvalue(q_function: QFunction):
@@ -53,8 +62,8 @@ class QFunctionHelpers:
     @staticmethod
     def __get_max_value_action_from_state(qdict, state):
         values = qdict[state].values()
-        amax = np.argmax(qdict[state].values())
-        return state, qdict[state].keys()[amax]
+        amax = np.argmax(list(qdict[state].values()))
+        return state, list(qdict[state].keys())[amax]
 
     @staticmethod
     def __get_max_value_from_state(qdict, state):
@@ -65,9 +74,9 @@ class QFunctionHelpers:
     def __get_qvalues(discount_factor: float, state_actions_tuple):
         state = state_actions_tuple[0]
         actions = state_actions_tuple[1]
-        state_action_values = {}
-        state_action_values[state] = {}
+        state_action_values = {state: {}}
+
         for action in actions:
             state_action_values[state][action] = action.get_value(discount_factor)
-        # print(state_action_values)
+
         return state_action_values

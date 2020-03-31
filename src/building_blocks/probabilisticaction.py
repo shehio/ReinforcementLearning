@@ -7,11 +7,14 @@ class ProbabilisticAction:
     def __init__(self, name, rewards, probabilities, states):
         self.__validate_input(name, rewards, probabilities, states)  # Todo: Validate states here too.
         self.name = name
+        self.__probabilities = probabilities
         self.cdf = self.__create_cdf(probabilities)
         self.actions =  self.__create_derived_actions(rewards, probabilities, states)
 
-    def get_action(self): # Try a simpler implementation: return np.random.choice(self.actions, self.probabilities)
-         return self.actions[bisect_left(self.cdf, random.uniform(0, 1))]
+    def get_action(self):
+        length = self.__probabilities.shape[0]
+        rand = np.random.choice(length, p=self.__probabilities)
+        return self.actions[rand]
 
     def get_value(self, discount_factor: float):
         value = 0
@@ -59,13 +62,4 @@ class ProbabilisticAction:
         return np.cumsum(probabilities)
 
     def __repr__(self):
-        return self.name
-
-    def __str__(self):
-        returned_string = ''
-        returned_string += f'ProbabilisticAction {self.name} consists of actions:\n'
-        for action in self.actions:
-            returned_string += repr(action) + " "
-        returned_string += '\n'
-
-        return returned_string
+        return f'{self.name}, actions: {self.actions}'

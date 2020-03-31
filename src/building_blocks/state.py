@@ -19,21 +19,11 @@ class State:
     def update_value(self, value: float):
         self.updated_value = value
 
-    def __hash__(self):  # Not a good implementation
+    def is_terminal(self):
+        return self.actions.shape == (0,)
+
+    def __hash__(self):  # @Todo: Change the implementation
         return hash(self.name)
 
     def __repr__(self):
         return f'{self.name}: {self.updated_value}\n'
-
-    def __str__(self):
-        returned_string = ''
-        if self.actions.size == 0:
-            returned_string += f'State {self.name} has an initial value of {self.initial_value} and no actions.\n\n'
-        else:
-            returned_string += f'State {self.name} has an initial value of {self.initial_value}, ' \
-                               f'an updated value of {self.updated_value}, and actions:\n'
-            for counter, action in enumerate(self.actions):
-                returned_string += f'{str(counter + 1)}. {repr(action)}'
-            returned_string += '\n\n'
-
-        return returned_string

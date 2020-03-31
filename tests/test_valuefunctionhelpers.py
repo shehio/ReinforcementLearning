@@ -4,4 +4,8 @@ from src.building_blocks.valuefunctionhelpers import ValueFunctionHelpers
 
 def test_value_iteration():
     mdp = GridWorld.get_game()
-    ValueFunctionHelpers.value_iteration(mdp, 0.9, 100, 0.001)
+    ValueFunctionHelpers.value_iteration(
+        mdp=mdp,
+        discount_factor=0.9,
+        iterations=100,
+        epsilon=0.001)
