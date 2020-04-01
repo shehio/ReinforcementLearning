@@ -27,4 +27,4 @@ def test_init():
 
 def test_print():
     assert reward == action.reward
-    assert 'Reward: 5 to state: state with probability: 1.' == action.__repr__()
+    assert '=> state s.t p = 1 w/ 5.' == action.__repr__()

@@ -44,7 +44,8 @@ class ValueFunctionHelpers:
             i = i + 1
             terminal_states = 0
 
-        return current_value_function
+        policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
+        return policy, current_value_function
 
     @staticmethod
     def get_value_function_difference(

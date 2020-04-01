@@ -36,7 +36,7 @@ class QFunctionHelpers:
     def get_policy_using_max_qfunction_from_mdp(
             mdp: MarkovDecisionProcess,
             discount_factor,
-            q_function: QFunction = None,):
+            q_function: QFunction = None):
         if q_function is None:
             # print('went in the if')
             q_function = QFunctionHelpers.get_qfunction(mdp, discount_factor)

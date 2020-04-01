@@ -14,4 +14,4 @@ class Action:
         return self.reward + discount_factor * self.to.update_value
 
     def __repr__(self):
-        return f'Reward: {self.reward} to state: {self.to.name} with probability: {self.probability}.'
+        return f'=> {self.to.name} s.t p = {self.probability} w/ {self.reward}.'

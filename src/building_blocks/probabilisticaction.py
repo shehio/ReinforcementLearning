@@ -62,4 +62,4 @@ class ProbabilisticAction:
         return np.cumsum(probabilities)
 
     def __repr__(self):
-        return f'{self.name}, actions: {self.actions}'
+        return f'{self.name}'  # 'actions: {self.actions}'

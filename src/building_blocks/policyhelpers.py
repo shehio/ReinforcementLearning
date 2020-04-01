@@ -11,10 +11,10 @@ class PolicyHelpers:
 
     @staticmethod
     def policy_iteration(mdp: MarkovDecisionProcess, discount_factor, maximum_iteration=1000, epsilon=0.05):
-        old_policy = Policy(mdp)  # Initializes a random policy by default.
+        new_policy = old_policy = Policy(mdp)  # Initializes a random policy by default.
         policy_is_stable = False
         i = 0
-        while not (policy_is_stable or i > maximum_iteration):
+        while not (policy_is_stable or i >= maximum_iteration):
             mdp, value_function = PolicyHelpers.evaluate_policy(mdp, old_policy, discount_factor, epsilon)
             new_policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
             if PolicyHelpers.are_similar(old_policy, new_policy):
@@ -27,7 +27,7 @@ class PolicyHelpers:
             print(mdp)
             print()
 
-        return old_policy
+        return new_policy, mdp
 
     @staticmethod  # @Todo: Refactor this with the similar code in valuefunctionhelpers.
     def evaluate_policy(mdp: MarkovDecisionProcess, policy: Policy, discount_factor, epsilon: 0.05):
@@ -86,6 +86,6 @@ class PolicyHelpers:
         if first_policy.mdp != second_policy.mdp:
             return False
         for state in first_policy.policy_dict.keys():
-            if state not in second_policy.policy_dict.keys() or first_policy.policy_dict[state] == second_policy.policy_dict[state]:
+            if first_policy.policy_dict[state] != second_policy.policy_dict[state]:
                 return False
         return True
