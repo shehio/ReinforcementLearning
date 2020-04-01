@@ -1,8 +1,8 @@
-from .markovdecisionprocess import MarkovDecisionProcess
-from .qfunctionhelpers import QFunctionHelpers
-from .policy import Policy
-from .valuefunction import ValueFunction
-from .valuefunctionhelpers import ValueFunctionHelpers
+from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
+from src.building_blocks.qfunctionhelpers import QFunctionHelpers
+from src.building_blocks.policy import Policy
+from src.building_blocks.valuefunction import ValueFunction
+from src.dynamic_programming.valuefunctionhelpers import ValueFunctionHelpers
 
 import functools
 
@@ -52,6 +52,15 @@ class PolicyHelpers:
         return mdp, current_value_function  # @Todo: Don't need the value_function here.
 
     @staticmethod
+    def are_similar(first_policy: Policy, second_policy: Policy):
+        if first_policy.mdp != second_policy.mdp:
+            return False
+        for state in first_policy.policy_dict.keys():
+            if first_policy.policy_dict[state] != second_policy.policy_dict[state]:
+                return False
+        return True
+
+    @staticmethod
     def __validate_input(policy, discount_factor):
         if not isinstance(policy, Policy):
             raise TypeError("policy has to be of type Policy.")
@@ -80,12 +89,3 @@ class PolicyHelpers:
             return state, state.updated_value
         val = policy.get_action(state).get_value(discount_factor)
         return state, val
-
-    @staticmethod
-    def are_similar(first_policy: Policy, second_policy: Policy):
-        if first_policy.mdp != second_policy.mdp:
-            return False
-        for state in first_policy.policy_dict.keys():
-            if first_policy.policy_dict[state] != second_policy.policy_dict[state]:
-                return False
-        return True

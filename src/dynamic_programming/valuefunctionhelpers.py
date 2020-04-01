@@ -1,6 +1,6 @@
-from .markovdecisionprocess import MarkovDecisionProcess
-from .qfunctionhelpers import QFunctionHelpers
-from .valuefunction import ValueFunction
+from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
+from src.building_blocks.qfunctionhelpers import QFunctionHelpers
+from src.building_blocks.valuefunction import ValueFunction
 
 import numpy as np
 

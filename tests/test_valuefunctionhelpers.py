@@ -1,6 +1,6 @@
 from src.problems.gridworld import GridWorld
-from src.building_blocks.policyhelpers import Policy
-from src.building_blocks.valuefunctionhelpers import ValueFunctionHelpers
+from src.building_blocks.policy import Policy
+from src.dynamic_programming.valuefunctionhelpers import ValueFunctionHelpers
 
 
 def test_value_iteration():

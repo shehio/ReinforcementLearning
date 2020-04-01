@@ -1,6 +1,6 @@
 from src.problems.gridworld import GridWorld
-from src.building_blocks.policyhelpers import Policy
-from src.building_blocks.policyhelpers import PolicyHelpers
+from src.building_blocks.policy import Policy
+from src.dynamic_programming.policyhelpers import PolicyHelpers
 
 
 def test_policy_iteration():
