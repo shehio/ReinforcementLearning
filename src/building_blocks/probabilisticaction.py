@@ -1,6 +1,5 @@
 import numpy as np
-import random as random
-from .action import Action
+
 
 class ProbabilisticAction:
 
@@ -8,8 +7,7 @@ class ProbabilisticAction:
         self.__validate_input(name, rewards, probabilities, states)  # Todo: Validate states here too.
         self.name = name
         self.__probabilities = probabilities
-        self.cdf = self.__create_cdf(probabilities)
-        self.actions =  self.__create_derived_actions(rewards, probabilities, states)
+        self.actions = self.__create_derived_actions(rewards, probabilities, states)
 
     def get_action(self):
         length = self.__probabilities.shape[0]
@@ -55,11 +53,27 @@ class ProbabilisticAction:
     def __create_derived_actions(self, rewards, probabilities, states):
         return np.asarray(list(map(self.__create_action, rewards, probabilities, states)))
 
-    def __create_action(self, reward, probability, state):
+    @staticmethod
+    def __create_action(reward, probability, state):
         return Action(reward, state, probability)
-
-    def __create_cdf(self, probabilities):
-        return np.cumsum(probabilities)
 
     def __repr__(self):
         return f'{self.name}'  # 'actions: {self.actions}'
+
+
+class Action:
+    def __init__(self, reward, to, probability=1):  # Todo: Validate state here too.
+        if not isinstance(reward, (int, float, np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
+            raise TypeError("Reward has to be a number.")
+        self.reward = reward
+        self.to = to
+        self.probability = probability
+
+    def get_action(self):
+        return self
+
+    def get_value(self, discount_factor: float):
+        return self.reward + discount_factor * self.to.update_value
+
+    def __repr__(self):
+        return f'=> {self.to.name} s.t p = {self.probability} w/ {self.reward}.'

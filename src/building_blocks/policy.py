@@ -1,4 +1,4 @@
-from .action import Action
+from .probabilisticaction import ProbabilisticAction
 from .markovdecisionprocess import MarkovDecisionProcess
 from .state import State
 
@@ -19,7 +19,7 @@ class Policy:
 
     def update_policy(self, state, action):
         self.__validate_state(state)
-        if not isinstance(action, Action):
+        if not isinstance(action, ProbabilisticAction):
             raise TypeError("action has to be of type Action.")
         self.policy_dict[state] = action
 

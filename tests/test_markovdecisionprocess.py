@@ -1,4 +1,4 @@
-from src.building_blocks.action import Action
+from src.building_blocks.actionfactory import ActionFactory
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
 from src.building_blocks.state import State
 
@@ -30,7 +30,7 @@ def test_print():  # TODO: Test other combinations
     state1 = State('state 1', 0)
     state2 = State('state 2', 0)
 
-    action1 = Action(5, state1)
+    action1 = ActionFactory.create_action('action', 5, state1)
 
     state0.add_action(action1)
     state2.add_action(action1)

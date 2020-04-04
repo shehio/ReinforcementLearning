@@ -1,4 +1,4 @@
-from src.building_blocks.action import Action
+from src.building_blocks.actionfactory import ActionFactory
 from src.building_blocks.probabilisticaction import ProbabilisticAction
 from src.building_blocks.state import State
 
@@ -44,7 +44,7 @@ def test_init():
 def test_add_action():
     state = State(state_name, initial_value)
     other_state = State('other_state', initial_value)
-    action = Action(5, other_state)
+    action = ActionFactory.create_action('action', 5, other_state)
     probabilistic_action = ProbabilisticAction(
         'pAction',
         np.array((10, 12)),

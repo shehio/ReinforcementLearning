@@ -1,4 +1,3 @@
-from .action import Action
 from .probabilisticaction import ProbabilisticAction
 from .state import State
 
@@ -13,10 +12,10 @@ class StateFactory:
     def add_action(state, action):  # or probabilisticaction
         if not isinstance(state, State):
             raise TypeError("State to be an instance of State.")
-        if not isinstance(action, (Action, ProbabilisticAction)):
+        if not isinstance(action, ProbabilisticAction):
             raise TypeError("Action to be an instance of Action or ProbabilisticAction.")
-        if isinstance(action, Action) and isinstance(action.to, State):  # This should be part of Action
-            raise TypeError("To in the action has to be an instance of State.")
+        # if isinstance(action, Action) and isinstance(action.to, State):  # This should be part of Action
+        #     raise TypeError("To in the action has to be an instance of State.")
         # if isinstance(action, ProbabilisticAction) and isinstance(action.states.dtype, State):  # @Todo: Move to ProbabilisticAction
         #     raise TypeError("The dtype of states in probabilistic_action has to be of type State.")
         state.add_action(action)

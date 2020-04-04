@@ -1,4 +1,3 @@
-from src.building_blocks.action import Action
 from src.building_blocks.probabilisticaction import ProbabilisticAction
 from src.building_blocks.state import State
 
@@ -9,7 +8,6 @@ default_name = 'pAction'
 default_reward = 5
 first_state = State('state', 0)
 second_state = State('another_state', 0)
-default_action = Action(default_reward, first_state)
 default_probabilities = np.array([1])
 rewards = np.array([1])
 str_array = np.array(["string"])
@@ -81,17 +79,6 @@ def test_init_with__incompatible_rewards_and_states():
     with pytest.raises(ValueError) as exception:
         ProbabilisticAction(default_name, np.array((10, 12)), np.array((0.5, 0.5)), states_array)
     assert "Probabilities array and states array have different dimensions." == str(exception.value)
-
-
-def test_cdf_is_computed_correctly():
-    probabilistic_action = ProbabilisticAction(
-        default_name,
-        np.array((10, 12)),
-        np.array((0.5, 0.5)),
-        np.array((State('state', 0), State('another_state', 0))))
-    assert probabilistic_action.cdf.shape == (2,)
-    assert probabilistic_action.cdf[0] == 0.5
-    assert probabilistic_action.cdf[1] == 1
 
 
 def test_actions_are_computed_correctly():
