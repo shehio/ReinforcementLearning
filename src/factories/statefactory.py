@@ -1,5 +1,5 @@
-from .probabilisticaction import ProbabilisticAction
-from .state import State
+from src.building_blocks.probabilisticaction import ProbabilisticAction
+from src.building_blocks.state import State
 
 
 class StateFactory:
@@ -14,10 +14,6 @@ class StateFactory:
             raise TypeError("State to be an instance of State.")
         if not isinstance(action, ProbabilisticAction):
             raise TypeError("Action to be an instance of Action or ProbabilisticAction.")
-        # if isinstance(action, Action) and isinstance(action.to, State):  # This should be part of Action
-        #     raise TypeError("To in the action has to be an instance of State.")
-        # if isinstance(action, ProbabilisticAction) and isinstance(action.states.dtype, State):  # @Todo: Move to ProbabilisticAction
-        #     raise TypeError("The dtype of states in probabilistic_action has to be of type State.")
         state.add_action(action)
 
     @staticmethod

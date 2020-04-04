@@ -1,4 +1,4 @@
-from src.building_blocks.actionfactory import ActionFactory
+from src.factories.actionfactory import ActionFactory
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
 from src.building_blocks.state import State
 

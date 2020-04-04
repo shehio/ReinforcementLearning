@@ -38,19 +38,17 @@ class QFunctionHelpers:
             discount_factor,
             q_function: QFunction = None):
         if q_function is None:
-            # print('went in the if')
             q_function = QFunctionHelpers.get_qfunction(mdp, discount_factor)
-        # print(q_function)
         policy_dict = dict(map(
-            functools.partial(QFunctionHelpers.__get_max_value_action_from_state, q_function.dict),
-            q_function.dict.keys()))
+            functools.partial(QFunctionHelpers.__get_max_value_action_from_state, q_function.qdict),
+            q_function.qdict.keys()))
         return Policy(mdp, policy_dict)
 
     @staticmethod
     def get_value_function_from_max_qvalue(q_function: QFunction):
         return ValueFunction(
-            dict(map(functools.partial(QFunctionHelpers.__get_max_value_from_state, q_function.dict),
-                     q_function.dict.keys())))
+            dict(map(functools.partial(QFunctionHelpers.__get_max_value_from_state, q_function.qdict),
+                     q_function.qdict.keys())))
 
     @staticmethod
     def __validate_discount_factor(discount_factor):

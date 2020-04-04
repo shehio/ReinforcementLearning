@@ -10,7 +10,7 @@ class Policy:
     def __init__(self, mdp, policy_dict=None):
         if not isinstance(mdp, MarkovDecisionProcess):
             raise TypeError("mdp has to be of type MarkovDecisionProcess.")
-        self.mdp = mdp  # @Todo: Do we need a reference of the mdp in here?
+        self.mdp = mdp
 
         if policy_dict is None:
             self.policy_dict = self.__create_random_policy()

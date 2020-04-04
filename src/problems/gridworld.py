@@ -1,9 +1,8 @@
 import sys
 sys.path.append("/Users/shehio/Downloads/workspace/RL")
 
-
-from src.building_blocks.statefactory import StateFactory
-from src.building_blocks.probabilisticaction import ProbabilisticAction
+from src.factories.actionfactory import ActionFactory
+from src.factories.statefactory import StateFactory
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
 import numpy as np
 
@@ -136,5 +135,5 @@ class GridWorld:
     def __add_state_transitions(state, rewards, probabilities, transitions):  # right, left, up, down
         action_names = ['right', 'left', 'up', 'down']
         for (action_name, transition) in zip(action_names, transitions):
-            probabilistic_action = ProbabilisticAction(action_name, rewards, probabilities, transition)
+            probabilistic_action = ActionFactory.create_probabilistic_action(action_name, rewards, probabilities, transition)
             StateFactory.add_action(state, probabilistic_action)

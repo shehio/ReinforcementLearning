@@ -6,8 +6,7 @@ import numpy as np
 
 class MarkovDecisionProcess:
 
-    def __init__(self, states):
-        # @Todo: Verify the type of states.
+    def __init__(self, states):  # @Todo: Verify the type of states.
         self.states = states
 
     # This might not be very efficient.
@@ -24,7 +23,7 @@ class MarkovDecisionProcess:
     # Should this method be on mdp?
     @staticmethod
     def update_values(value_function: ValueFunction):  # Do we still need the validations with the type hint here?
-        any(map(lambda state: state.update_value(value_function.dict[state]), value_function.dict.keys()))
+        any(map(lambda state: state.update_value(value_function.value_dict[state]), value_function.value_dict.keys()))
 
     def terminal_states(self):
         return sum(state.actions.shape == (0,) for state in self.states)

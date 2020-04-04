@@ -22,8 +22,5 @@ class State:
     def is_terminal(self):
         return self.actions.shape == (0,)
 
-    def __hash__(self):  # @Todo: Change the implementation
-        return hash(self.name)
-
     def __repr__(self):
         return f'{self.name}: {self.updated_value}\n'

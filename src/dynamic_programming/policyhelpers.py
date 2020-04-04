@@ -49,7 +49,7 @@ class PolicyHelpers:
             mdp.update_values(current_value_function)
             prev_value_function = current_value_function
 
-        return mdp, current_value_function  # @Todo: Don't need the value_function here.
+        return mdp, current_value_function
 
     @staticmethod
     def are_similar(first_policy: Policy, second_policy: Policy):
@@ -76,9 +76,8 @@ class PolicyHelpers:
         value = action.get_value(discount_factor)
         return state, value
 
-    @staticmethod  ## @Todo: bad implementation, defer the fix after creating the unified API between action and paction
+    @staticmethod
     def __get_value_function_from_policy(mdp: MarkovDecisionProcess, policy: Policy, discount_factor: float):
-        ## For all the states in the mdp, take the action given by the policy's dict and multiply the discount factor by something.
         return ValueFunction(dict(map(
             functools.partial(PolicyHelpers.__get_state_value, discount_factor, policy),
             mdp.states)))

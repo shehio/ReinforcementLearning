@@ -1,18 +1,20 @@
+from .state import State
+
 import numpy as np
 
 
 class ProbabilisticAction:
 
     def __init__(self, name, rewards, probabilities, states):
-        self.__validate_input(name, rewards, probabilities, states)  # Todo: Validate states here too.
+        self.__validate_input(name, rewards, probabilities, states)
         self.name = name
         self.__probabilities = probabilities
         self.actions = self.__create_derived_actions(rewards, probabilities, states)
 
-    def get_action(self):
+    def to(self):
         length = self.__probabilities.shape[0]
         rand = np.random.choice(length, p=self.__probabilities)
-        return self.actions[rand]
+        return self.actions[rand].to()
 
     def get_value(self, discount_factor: float):
         value = 0
@@ -21,17 +23,20 @@ class ProbabilisticAction:
 
         return value
 
-    def __validate_input(self, name, rewards, probabilities, states): # Todo: add uniqueness of states test?
+    def __validate_input(self, name, rewards, probabilities, states):
         if not isinstance(name, str):
             raise TypeError("Name has to be of type str.")
         self.__validate_rewards(rewards)
         self.__validate_probabilities(probabilities)
+        # self.__validate_states(states)  # @Todo: Figure out what's wrong with this.
         if not rewards.shape == probabilities.shape:
             raise ValueError("Rewards array and probabilities array have different dimensions.")
         if not probabilities.shape == states.shape:
             raise ValueError("Probabilities array and states array have different dimensions.")
 
-    def __validate_rewards(self, rewards):
+
+    @staticmethod
+    def __validate_rewards(rewards):
         if not isinstance(rewards, np.ndarray):
             raise TypeError("Rewards array has to be an ndarray.")
         # https://stackoverflow.com/questions/26921836/correct-way-to-test-for-numpy-dtype
@@ -40,7 +45,8 @@ class ProbabilisticAction:
         if rewards.size == 0:
             raise ValueError("Rewards array can't be empty.")
 
-    def __validate_probabilities(self, probabilities):
+    @staticmethod
+    def __validate_probabilities(probabilities):
         if not isinstance(probabilities, np.ndarray):
             raise TypeError("Probabilities array has to be an ndarray.")
         if not(probabilities.dtype in (int, float, np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
@@ -60,17 +66,22 @@ class ProbabilisticAction:
     def __repr__(self):
         return f'{self.name}'  # 'actions: {self.actions}'
 
+    @staticmethod
+    def __validate_states(states):
+        if not (states.dtype is State):
+            raise TypeError("The dtype of states array has to be of type State.")
+
 
 class Action:
-    def __init__(self, reward, to, probability=1):  # Todo: Validate state here too.
+    def __init__(self, reward, to, probability=1):
         if not isinstance(reward, (int, float, np.float32, np.float64, np.int8, np.int16, np.int32, np.int64)):
             raise TypeError("Reward has to be a number.")
         self.reward = reward
         self.to = to
         self.probability = probability
 
-    def get_action(self):
-        return self
+    def to(self):
+        return self.to
 
     def get_value(self, discount_factor: float):
         return self.reward + discount_factor * self.to.update_value

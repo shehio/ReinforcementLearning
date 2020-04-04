@@ -6,9 +6,6 @@ import numpy as np
 
 
 ## @Todo: Unify the level of abstraction in this class and in qfunctionhelpers.
-## @Todo: These helpers shouldn't live in the same folder as the basic components: action, state, mdp.
-## @Todo: Rename dict everywhere.
-## @Todo: Have a common interface between action and probabilistic action.
 class ValueFunctionHelpers:
 
     @staticmethod
@@ -53,8 +50,8 @@ class ValueFunctionHelpers:
             second_value_function: ValueFunction,
             states_without_actions_count: int):
 
-        first_vf_keys = first_value_function.dict.keys()
-        second_vf_keys = second_value_function.dict.keys()
+        first_vf_keys = first_value_function.value_dict.keys()
+        second_vf_keys = second_value_function.value_dict.keys()
 
         if abs(len(first_vf_keys) - len(second_vf_keys)) != states_without_actions_count:
             raise ValueError("The numbers of states of the first and the second value functions are different.")
@@ -67,6 +64,6 @@ class ValueFunctionHelpers:
             minimum_states_vf_keys = first_vf_keys
 
         state_differences = list(map(
-            lambda state: abs(first_value_function.dict[state] - second_value_function.dict[state]),
+            lambda state: abs(first_value_function.value_dict[state] - second_value_function.value_dict[state]),
             minimum_states_vf_keys))
         return max(state_differences)
