@@ -1,6 +1,3 @@
-import sys
-sys.path.append("/Users/shehio/Downloads/workspace/RL")
-
 from src.factories.actionfactory import ActionFactory
 from src.factories.statefactory import StateFactory
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
@@ -23,7 +20,7 @@ class GridWorld:
 
     @staticmethod
     def get_game():
-        (state1, state2, state3) = GridWorld.__create_default_states(('(0, 0)', '(0, 1)',  '(0, 2)'))
+        (state1, state2, state3) = GridWorld.__create_default_states(('(0, 0)', '(0, 1)', '(0, 2)'))
         state4 = StateFactory.create_state('(0, 3)', 100)
         (state5, state6) = GridWorld.__create_default_states(('(1, 0)', '(1, 2)'))
         state7 = StateFactory.create_state('(1, 3)', -100)
@@ -38,9 +35,9 @@ class GridWorld:
             probabilities,
             np.array(
                 [np.array([state2, state1, state5]),
-                np.array([state1, state1, state5]),
-                np.array([state1, state2, state1]),
-                np.array([state5, state2, state1])]))
+                 np.array([state1, state1, state5]),
+                 np.array([state1, state2, state1]),
+                 np.array([state5, state2, state1])]))
 
         GridWorld.__add_state_transitions(
             state2,
@@ -48,9 +45,9 @@ class GridWorld:
             probabilities,
             np.array(
                 [np.array([state3, state2, state2]),
-                np.array([state1, state2, state2]),
-                np.array([state2, state3, state1]),
-                np.array([state2, state3, state1])]))
+                 np.array([state1, state2, state2]),
+                 np.array([state2, state3, state1]),
+                 np.array([state2, state3, state1])]))
 
         GridWorld.__add_state_transitions(
             state3,
@@ -58,9 +55,9 @@ class GridWorld:
             probabilities,
             np.array(
                 [np.array([state4, state3, state6]),
-                np.array([state2, state3, state6]),
-                np.array([state3, state4, state2]),
-                np.array([state6, state4, state2])]))
+                 np.array([state2, state3, state6]),
+                 np.array([state3, state4, state2]),
+                 np.array([state6, state4, state2])]))
 
         GridWorld.__add_state_transitions(
             state5,
@@ -68,9 +65,9 @@ class GridWorld:
             probabilities,
             np.array(
                 [np.array([state5, state1, state8]),
-                np.array([state5, state1, state8]),
-                np.array([state1, state5, state5]),
-                np.array([state8, state5, state5])]))
+                 np.array([state5, state1, state8]),
+                 np.array([state1, state5, state5]),
+                 np.array([state8, state5, state5])]))
 
         GridWorld.__add_state_transitions(
             state6,
@@ -135,5 +132,6 @@ class GridWorld:
     def __add_state_transitions(state, rewards, probabilities, transitions):  # right, left, up, down
         action_names = ['right', 'left', 'up', 'down']
         for (action_name, transition) in zip(action_names, transitions):
-            probabilistic_action = ActionFactory.create_probabilistic_action(action_name, rewards, probabilities, transition)
+            probabilistic_action = ActionFactory.create_probabilistic_action(action_name, rewards, probabilities,
+                                                                             transition)
             StateFactory.add_action(state, probabilistic_action)

@@ -16,39 +16,37 @@ class QFunctionHelpers:
         QFunctionHelpers.__validate_discount_factor(discount_factor)
         state_actions = {}
 
-        print(mdp)
-
         # Only get the states that have actions. If not, they should not be added to QFunction.
         for state in mdp.states:
             if not state.is_terminal():
                 state_actions[state] = state.actions
 
-        entry_list = list(map(
-            functools.partial(QFunctionHelpers.__get_qvalues, discount_factor),
-            state_actions.items()))
+        get_qvalues = functools.partial(QFunctionHelpers.__get_qvalues, discount_factor)
+        entry_list = list(map(get_qvalues, state_actions.items()))
 
         qdict = {}
         for entry in entry_list:
             qdict.update(entry)
         return QFunction(qdict)
 
-    @staticmethod  # @Todo: Add validations to this method.
+    @staticmethod
     def get_policy_using_max_qfunction_from_mdp(
             mdp: MarkovDecisionProcess,
             discount_factor,
             q_function: QFunction = None):
+        QFunctionHelpers.__validate_discount_factor(discount_factor)
         if q_function is None:
             q_function = QFunctionHelpers.get_qfunction(mdp, discount_factor)
-        policy_dict = dict(map(
-            functools.partial(QFunctionHelpers.__get_max_value_action_from_state, q_function.qdict),
-            q_function.qdict.keys()))
+        get_max_value_action_from_state = functools.partial(
+            QFunctionHelpers.__get_max_value_action_from_state,
+            q_function.qdict)
+        policy_dict = dict(map(get_max_value_action_from_state, q_function.qdict.keys()))
         return Policy(mdp, policy_dict)
 
     @staticmethod
     def get_value_function_from_max_qvalue(q_function: QFunction):
-        return ValueFunction(
-            dict(map(functools.partial(QFunctionHelpers.__get_max_value_from_state, q_function.qdict),
-                     q_function.qdict.keys())))
+        get_max_value_from_state = functools.partial(QFunctionHelpers.__get_max_value_from_state, q_function.qdict)
+        return ValueFunction(dict(map(get_max_value_from_state, q_function.qdict.keys())))
 
     @staticmethod
     def __validate_discount_factor(discount_factor):

@@ -20,8 +20,7 @@ class MarkovDecisionProcess:
             raise TypeError("state has to be of type State.")
         return state in self.states
 
-    # Should this method be on mdp?
-    @staticmethod
+    @staticmethod  # This is not right. We shouldn't have access to states here.
     def update_values(value_function: ValueFunction):  # Do we still need the validations with the type hint here?
         any(map(lambda state: state.update_value(value_function.value_dict[state]), value_function.value_dict.keys()))
 

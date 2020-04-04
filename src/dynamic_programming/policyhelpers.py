@@ -10,7 +10,7 @@ import functools
 class PolicyHelpers:
 
     @staticmethod
-    def policy_iteration(mdp: MarkovDecisionProcess, discount_factor, maximum_iteration=1000, epsilon=0.05):
+    def policy_iteration_sutton(mdp: MarkovDecisionProcess, discount_factor, maximum_iteration=1000, epsilon=0.05):
         new_policy = old_policy = Policy(mdp)  # Initializes a random policy by default.
         policy_is_stable = False
         i = 0
@@ -22,12 +22,36 @@ class PolicyHelpers:
             i = i + 1
             old_policy = new_policy
 
-            print(f'Iteration: {i}')
-            print('================= Current MDP =================')
-            print(mdp)
-            print()
+            PolicyHelpers.__print_current_mdp(i, mdp)
 
         return new_policy, mdp
+
+    @staticmethod
+    def policy_iteration_brunskill(mdp: MarkovDecisionProcess, discount_factor, maximum_iteration=1000, epsilon=0.05):
+        policy = Policy(mdp)  # Initializes a random policy by default.
+        policy_is_stable = False
+        i = 0
+        prev_value_function = ValueFunctionHelpers.create_value_function(mdp)
+
+        while not (policy_is_stable or i >= maximum_iteration):
+            qfunction = QFunctionHelpers.get_qfunction(mdp, discount_factor)
+            current_value_function = QFunctionHelpers.get_value_function_from_max_qvalue(qfunction)
+            mdp.update_values(current_value_function)
+            policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor, qfunction)
+
+            value_functions_difference = ValueFunctionHelpers.get_value_function_difference(
+                prev_value_function,
+                current_value_function)
+            if value_functions_difference < epsilon:
+                policy_is_stable = True
+
+            i = i + 1
+
+            prev_value_function = current_value_function
+
+            PolicyHelpers.__print_current_mdp(i, mdp)
+
+        return policy, mdp
 
     @staticmethod  # @Todo: Refactor this with the similar code in valuefunctionhelpers.
     def evaluate_policy(mdp: MarkovDecisionProcess, policy: Policy, discount_factor, epsilon: 0.05):
@@ -37,14 +61,12 @@ class PolicyHelpers:
         mdp.update_values(prev_value_function)
 
         value_function_diff = float("inf")
-        terminal_states = 0
 
         while value_function_diff > epsilon: # Should this break anyway after a particular number of iterations?
             current_value_function = PolicyHelpers.__get_value_function_from_policy(mdp, policy, discount_factor)
             value_function_diff = ValueFunctionHelpers.get_value_function_difference(
                 prev_value_function,
-                current_value_function,
-                terminal_states)  # The first iteration has an extra state. All other states are normalized.
+                current_value_function)
 
             mdp.update_values(current_value_function)
             prev_value_function = current_value_function
@@ -88,3 +110,10 @@ class PolicyHelpers:
             return state, state.updated_value
         val = policy.get_action(state).get_value(discount_factor)
         return state, val
+
+    @staticmethod
+    def __print_current_mdp(i, mdp):
+        print(f'Iteration: {i}')
+        print('================= Current MDP =================')
+        print(mdp)
+        print()

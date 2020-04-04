@@ -30,8 +30,7 @@ class ValueFunctionHelpers:
             current_value_function = QFunctionHelpers.get_value_function_from_max_qvalue(q_function)
             value_function_diff = ValueFunctionHelpers.get_value_function_difference(
                 prev_value_function,
-                current_value_function,
-                terminal_states)  # The first iteration has an extra state. All other states are normalized.
+                current_value_function)
 
             mdp.update_values(current_value_function)
             print(f'Iteration: {i}')
@@ -39,7 +38,6 @@ class ValueFunctionHelpers:
             print(mdp)
             prev_value_function = current_value_function
             i = i + 1
-            terminal_states = 0
 
         policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
         return policy, current_value_function
@@ -47,14 +45,11 @@ class ValueFunctionHelpers:
     @staticmethod
     def get_value_function_difference(
             first_value_function: ValueFunction,
-            second_value_function: ValueFunction,
-            states_without_actions_count: int):
+            second_value_function: ValueFunction):
 
         first_vf_keys = first_value_function.value_dict.keys()
         second_vf_keys = second_value_function.value_dict.keys()
 
-        if abs(len(first_vf_keys) - len(second_vf_keys)) != states_without_actions_count:
-            raise ValueError("The numbers of states of the first and the second value functions are different.")
         if len(np.intersect1d(first_vf_keys, second_vf_keys)) == len(first_vf_keys):
             raise ValueError("There seems to be different states between the value functions.")
 
