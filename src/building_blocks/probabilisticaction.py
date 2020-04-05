@@ -14,7 +14,7 @@ class ProbabilisticAction:
     def to(self):
         length = self.__probabilities.shape[0]
         rand = np.random.choice(length, p=self.__probabilities)
-        return self.actions[rand].to()
+        return self.actions[rand].to, self.actions[rand].reward
 
     def get_value(self, discount_factor: float):
         value = 0
@@ -33,7 +33,6 @@ class ProbabilisticAction:
             raise ValueError("Rewards array and probabilities array have different dimensions.")
         if not probabilities.shape == states.shape:
             raise ValueError("Probabilities array and states array have different dimensions.")
-
 
     @staticmethod
     def __validate_rewards(rewards):

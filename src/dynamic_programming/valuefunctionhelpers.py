@@ -5,7 +5,6 @@ from src.building_blocks.valuefunction import ValueFunction
 import numpy as np
 
 
-## @Todo: Unify the level of abstraction in this class and in qfunctionhelpers.
 class ValueFunctionHelpers:
 
     @staticmethod
