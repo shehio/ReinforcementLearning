@@ -7,7 +7,7 @@ import random
 
 class MonteCarloHelpers:
 
-    @staticmethod
+    @staticmethod  # Solving the prediction problem.
     def monte_carlo_policy_evaluation_every_visit(
             mdp: MarkovDecisionProcess,
             policy: Policy,
@@ -32,7 +32,7 @@ class MonteCarloHelpers:
         mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
         return mdp
 
-    @staticmethod
+    @staticmethod  # Solving the prediction problem.
     def monte_carlo_policy_evaluation_first_visit(
             mdp: MarkovDecisionProcess,
             policy: Policy,

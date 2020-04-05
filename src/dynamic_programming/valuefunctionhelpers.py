@@ -8,7 +8,7 @@ import numpy as np
 class ValueFunctionHelpers:
 
     @staticmethod
-    def create_value_function(mdp: MarkovDecisionProcess):
+    def get_value_function(mdp: MarkovDecisionProcess):
         if not isinstance(mdp, MarkovDecisionProcess):
             raise TypeError("mdp has to be of type MarkovDecisionProcess.")
         return ValueFunction(dict(map(lambda state: (state, state.updated_value), mdp.states)))
@@ -19,7 +19,7 @@ class ValueFunctionHelpers:
             discount_factor: float,
             iterations: 100,
             epsilon: 0.05):
-        prev_value_function = ValueFunctionHelpers.create_value_function(mdp)
+        prev_value_function = ValueFunctionHelpers.get_value_function(mdp)
         value_function_diff = float("inf")
         terminal_states = mdp.terminal_states()
         i = 0

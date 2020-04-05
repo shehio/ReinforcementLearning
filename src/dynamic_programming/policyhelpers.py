@@ -31,7 +31,7 @@ class PolicyHelpers:
         policy = Policy(mdp)  # Initializes a random policy by default.
         policy_is_stable = False
         i = 0
-        prev_value_function = ValueFunctionHelpers.create_value_function(mdp)
+        prev_value_function = ValueFunctionHelpers.get_value_function(mdp)
 
         while not (policy_is_stable or i >= maximum_iteration):
             qfunction = QFunctionHelpers.get_qfunction(mdp, discount_factor)
