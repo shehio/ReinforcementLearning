@@ -29,7 +29,7 @@ class QFunctionHelpers:
             qdict.update(entry)
         return QFunction(qdict)
 
-    @staticmethod
+    @staticmethod  # Greedy approach.
     def get_policy_using_max_qfunction_from_mdp(
             mdp: MarkovDecisionProcess,
             discount_factor,

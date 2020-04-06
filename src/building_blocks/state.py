@@ -16,6 +16,10 @@ class State:
     def add_action(self, action):  # Note that it could be a probabilistic action too.
         self.actions = np.append(self.actions, action)
 
+    def get_random_action(self):
+        length = self.actions.shape[0]
+        return self.actions[np.random.choice(length)]
+
     def update_value(self, value: float):
         self.updated_value = value
 
