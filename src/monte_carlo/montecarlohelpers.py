@@ -120,7 +120,7 @@ class MonteCarloHelpers:
         policy_is_stable = False
         i = 0
         while policy_is_stable < stable_count:
-            mdp = MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit( # policy_evaluation_method(
+            mdp = policy_evaluation_method(
                 mdp,
                 old_policy,
                 discount_factor,
@@ -136,10 +136,14 @@ class MonteCarloHelpers:
             print(f'Iteration: {i}')
             print(mdp)
             print("============\n")
-
             i = i + 1
+
         return new_policy
 
+    # Note that the exploitation ratio passed into this function is critical. The exploitation ratio
+    # + the exploration ratio = 1. Without exploration, the policy might end up being stuck in just one place and never
+    # finish the episode. Another solution is to limit the number of states we visit per episode (in case the policy
+    # has us stuck).
     @staticmethod
     def __perform_episode(mdp, policy, exploitation_ratio):
         state, states_stack, rewards, counts_dict = MonteCarloHelpers.__initialize_iteration(mdp)

@@ -38,7 +38,7 @@ def __test_monte_carlo_prediction(lambda_definition):
         simulation_count)
     actual_value_function = ValueFunctionHelpers.get_value_function(mdp)
 
-    tolerance = 2  # Not based on statistical analysis
+    tolerance = 2  # Not based on any statistical analysis
     any(map(
         lambda state: __validate_with_tolerance(
             expected_value_function.value_dict[state],
@@ -48,12 +48,17 @@ def __test_monte_carlo_prediction(lambda_definition):
 
 
 def __test_monte_carlo_control(lambda_definition):
-    lambda_definition(
-        mdp=GridWorld.get_game(),
+    mdp = GridWorld.get_game()
+    expected_policy = __create_expected_policy(mdp)
+    actual_policy = lambda_definition(
+        mdp=mdp,
         discount_factor=0.9,
         stable_count=3,
         exploitation_ratio=0.9,
         simulation_number=1000)
+
+    for state in actual_policy.policy_dict.keys():
+        assert expected_policy.policy_dict[state] == actual_policy.policy_dict[state]
 
 
 def __create_expected_policy(mdp: MarkovDecisionProcess) -> Policy:
