@@ -7,19 +7,22 @@ from src.dynamic_programming.valuefunctionhelpers import ValueFunctionHelpers
 
 
 def test_monte_carlo_prediction_first_visit():
-    __test_monte_carlo(MonteCarloHelpers.monte_carlo_policy_evaluation_first_visit)
+    __test_monte_carlo_prediction(MonteCarloHelpers.monte_carlo_policy_evaluation_first_visit)
 
 
 def test_monte_carlo_prediction_every_visit():
-    __test_monte_carlo(MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit)
+    __test_monte_carlo_prediction(MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit)
 
 
 def test_monte_carlo_control_every_visit():
-    mdp = GridWorld.get_game()
-    MonteCarloHelpers.monte_carlo_control_every_visit(mdp, 0.9, 3, 0.9, 1000)
+    __test_monte_carlo_control(MonteCarloHelpers.monte_carlo_control_every_visit)
 
 
-def __test_monte_carlo(lambda_definition):
+def test_monte_carlo_control_first_visit():
+    __test_monte_carlo_control(MonteCarloHelpers.monte_carlo_control_first_visit)
+
+
+def __test_monte_carlo_prediction(lambda_definition):
     mdp = GridWorld.get_game()
     policy = __create_expected_policy(mdp)
     discount_factor = 0.9
@@ -42,6 +45,15 @@ def __test_monte_carlo(lambda_definition):
             actual_value_function.value_dict[state],
             tolerance),
         expected_value_function.value_dict))
+
+
+def __test_monte_carlo_control(lambda_definition):
+    lambda_definition(
+        mdp=GridWorld.get_game(),
+        discount_factor=0.9,
+        stable_count=3,
+        exploitation_ratio=0.9,
+        simulation_number=1000)
 
 
 def __create_expected_policy(mdp: MarkovDecisionProcess) -> Policy:

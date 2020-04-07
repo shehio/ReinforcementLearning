@@ -17,31 +17,29 @@ class MonteCarloHelpers:
             exploitation_ratio: float,
             simulation_number: int) -> Policy:
 
-        old_policy = Policy(mdp)
-        policy_is_stable = False
-        i = 0
+        return MonteCarloHelpers.__monte_carlo_control_common(
+            mdp,
+            MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit,
+            discount_factor,
+            exploitation_ratio,
+            stable_count,
+            simulation_number)
 
-        while policy_is_stable < stable_count:
-            mdp = MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit(
-                mdp,
-                old_policy,
-                discount_factor,
-                exploitation_ratio,
-                simulation_number)
-            new_policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
-            if PolicyHelpers.are_similar(old_policy, new_policy):
-                policy_is_stable = policy_is_stable + 1
-            else:
-                policy_is_stable = 0
-            old_policy = new_policy
+    @staticmethod  # Solving the control problem.
+    def monte_carlo_control_first_visit(
+            mdp: MarkovDecisionProcess,
+            discount_factor: float,
+            stable_count: int,
+            exploitation_ratio: float,
+            simulation_number: int) -> Policy:
 
-            print(f'Iteration: {i}')
-            print(mdp)
-            print("============\n")
-
-            i = i + 1
-
-        return new_policy
+        return MonteCarloHelpers.__monte_carlo_control_common(
+            mdp,
+            MonteCarloHelpers.monte_carlo_policy_evaluation_first_visit,
+            discount_factor,
+            exploitation_ratio,
+            stable_count,
+            simulation_number)
 
     @staticmethod  # Solving the prediction problem.
     def monte_carlo_policy_evaluation_every_visit(
@@ -109,6 +107,38 @@ class MonteCarloHelpers:
 
         mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
         return mdp
+
+    @staticmethod
+    def __monte_carlo_control_common(
+            mdp,
+            policy_evaluation_method,
+            discount_factor,
+            exploitation_ratio,
+            stable_count,
+            simulation_number):
+        old_policy = Policy(mdp)
+        policy_is_stable = False
+        i = 0
+        while policy_is_stable < stable_count:
+            mdp = MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit( # policy_evaluation_method(
+                mdp,
+                old_policy,
+                discount_factor,
+                exploitation_ratio,
+                simulation_number)
+            new_policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
+            if PolicyHelpers.are_similar(old_policy, new_policy):
+                policy_is_stable = policy_is_stable + 1
+            else:
+                policy_is_stable = 0
+            old_policy = new_policy
+
+            print(f'Iteration: {i}')
+            print(mdp)
+            print("============\n")
+
+            i = i + 1
+        return new_policy
 
     @staticmethod
     def __perform_episode(mdp, policy, exploitation_ratio):
