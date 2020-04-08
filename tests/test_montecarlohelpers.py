@@ -55,7 +55,7 @@ def __test_monte_carlo_control(lambda_definition):
         discount_factor=0.9,
         stable_count=3,
         exploitation_ratio=0.9,
-        simulation_number=1000)
+        episodes_count=1000)
 
     for state in actual_policy.policy_dict.keys():
         assert expected_policy.policy_dict[state] == actual_policy.policy_dict[state]

@@ -15,7 +15,7 @@ class MonteCarloHelpers:
             discount_factor: float,
             stable_count: int,
             exploitation_ratio: float,
-            simulation_number: int) -> Policy:
+            episodes_count: int) -> Policy:
 
         return MonteCarloHelpers.__monte_carlo_control_common(
             mdp,
@@ -23,7 +23,7 @@ class MonteCarloHelpers:
             discount_factor,
             exploitation_ratio,
             stable_count,
-            simulation_number)
+            episodes_count)
 
     @staticmethod  # Solving the control problem.
     def monte_carlo_control_first_visit(
@@ -31,7 +31,7 @@ class MonteCarloHelpers:
             discount_factor: float,
             stable_count: int,
             exploitation_ratio: float,
-            simulation_number: int) -> Policy:
+            episodes_count: int) -> Policy:
 
         return MonteCarloHelpers.__monte_carlo_control_common(
             mdp,
@@ -39,7 +39,7 @@ class MonteCarloHelpers:
             discount_factor,
             exploitation_ratio,
             stable_count,
-            simulation_number)
+            episodes_count)
 
     @staticmethod  # Solving the prediction problem.
     def monte_carlo_policy_evaluation_every_visit(
@@ -47,12 +47,12 @@ class MonteCarloHelpers:
             policy: Policy,
             discount_factor: float,
             exploitation_ratio: float,
-            simulation_number: int) -> MarkovDecisionProcess:
+            episodes_count: int) -> MarkovDecisionProcess:
 
         global_counts_dict = {}
         rewards_dict = {}
         i = 0
-        while i < simulation_number:
+        while i < episodes_count:
             states_stack, counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
@@ -61,13 +61,15 @@ class MonteCarloHelpers:
             MonteCarloHelpers.__absorb_dict(global_counts_dict, counts_dict)
 
             while len(states_stack) > 0:
-                terminal_reward = terminal_reward * discount_factor
+                terminal_reward = terminal_reward * discount_factor + rewards.pop()
                 state = states_stack.pop()
-                MonteCarloHelpers.__increment_dict(rewards_dict, state, terminal_reward + rewards.pop())
+                MonteCarloHelpers.__put_or_add_value_to_dict(rewards_dict, state, terminal_reward)
 
             i = i + 1
 
-        mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
+            # Monte Carlo Update
+            mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
+
         return mdp
 
     @staticmethod  # Solving the prediction problem.
@@ -76,13 +78,13 @@ class MonteCarloHelpers:
             policy: Policy,
             discount_factor: float,
             exploitation_ratio: float,
-            simulation_number: int) -> MarkovDecisionProcess:
+            episodes_count: int) -> MarkovDecisionProcess:
 
         global_counts_dict = {}
         rewards_dict = {}
 
         i = 0
-        while i < simulation_number:
+        while i < episodes_count:
             states_stack, local_counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
@@ -90,22 +92,23 @@ class MonteCarloHelpers:
             terminal_reward = terminal_state.updated_value
 
             while len(states_stack) > 0:
-                terminal_reward = terminal_reward * discount_factor
+                terminal_reward = terminal_reward * discount_factor + rewards.pop()
                 state = states_stack.pop()
                 if local_counts_dict[state] > 1:
                     local_counts_dict[state] = local_counts_dict[state] - 1
-                    rewards.pop()
                 else:
                     if state in rewards_dict:
-                        rewards_dict[state] = rewards_dict[state] + terminal_reward + rewards.pop()
+                        rewards_dict[state] = rewards_dict[state] + terminal_reward
                         global_counts_dict[state] = global_counts_dict[state] + 1
                     else:
-                        rewards_dict[state] = terminal_reward + rewards.pop()
+                        rewards_dict[state] = terminal_reward
                         global_counts_dict[state] = 1
 
             i = i + 1
 
-        mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
+            # Monte Carlo Update
+            mdp.update_values(ValueFunction(MonteCarloHelpers.__normalize_rewards(rewards_dict, global_counts_dict)))
+
         return mdp
 
     @staticmethod
@@ -115,7 +118,7 @@ class MonteCarloHelpers:
             discount_factor,
             exploitation_ratio,
             stable_count,
-            simulation_number):
+            episodes_count):
         old_policy = Policy(mdp)
         policy_is_stable = False
         i = 0
@@ -125,7 +128,7 @@ class MonteCarloHelpers:
                 old_policy,
                 discount_factor,
                 exploitation_ratio,
-                simulation_number)
+                episodes_count)
             new_policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
             if PolicyHelpers.are_similar(old_policy, new_policy):
                 policy_is_stable = policy_is_stable + 1
@@ -149,7 +152,7 @@ class MonteCarloHelpers:
         state, states_stack, rewards, counts_dict = MonteCarloHelpers.__initialize_iteration(mdp)
         while not state.is_terminal():
             states_stack.append(state)
-            MonteCarloHelpers.__increment_dict(counts_dict, state, 1)
+            MonteCarloHelpers.__put_or_add_value_to_dict(counts_dict, state, 1)
 
             if random.uniform(0, 1) > exploitation_ratio:
                 action_from_policy = state.get_random_action()
@@ -170,7 +173,7 @@ class MonteCarloHelpers:
         return state, states_stack, rewards, counts_dict
 
     @staticmethod
-    def __increment_dict(dictionary, key, value):
+    def __put_or_add_value_to_dict(dictionary, key, value):
         if key in dictionary:
             dictionary[key] = dictionary[key] + value
         else:
@@ -178,9 +181,10 @@ class MonteCarloHelpers:
 
     @staticmethod
     def __normalize_rewards(rewards_dict, counts_dict):
+        normalized_rewards_dict = {}
         for state in rewards_dict:
-            rewards_dict[state] = rewards_dict[state] / counts_dict[state]
-        return rewards_dict
+            normalized_rewards_dict[state] = rewards_dict[state] / counts_dict[state]
+        return normalized_rewards_dict
 
     @staticmethod
     def __absorb_dict(global_dict, local_dict):
