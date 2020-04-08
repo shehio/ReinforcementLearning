@@ -78,7 +78,10 @@ class PolicyHelpers:
         if first_policy.mdp != second_policy.mdp:
             return False
         for state in first_policy.policy_dict.keys():
-            if first_policy.policy_dict[state] != second_policy.policy_dict[state]:
+            if PolicyHelpers.__state_is_different_across_policies(
+                    state,
+                    first_policy.policy_dict,
+                    second_policy.policy_dict):
                 return False
         return True
 
@@ -117,3 +120,7 @@ class PolicyHelpers:
         print('================= Current MDP =================')
         print(mdp)
         print()
+
+    @staticmethod
+    def __state_is_different_across_policies(state, first_policy_dict, second_policy_dict):
+        return state not in second_policy_dict.keys() or first_policy_dict[state] != second_policy_dict[state]

@@ -1,5 +1,6 @@
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
 from src.building_blocks.policy import Policy
+from src.building_blocks.statediscoveredexception import StateDiscoveredException
 from src.dynamic_programming.policyhelpers import PolicyHelpers
 from src.building_blocks.qfunctionhelpers import QFunctionHelpers
 from src.building_blocks.valuefunction import ValueFunction
@@ -53,7 +54,7 @@ class MonteCarloHelpers:
         rewards_dict = {}
         i = 0
         while i < episodes_count:
-            states_stack, counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
+            mdp, states_stack, counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
                 exploration_ratio)
@@ -85,7 +86,7 @@ class MonteCarloHelpers:
 
         i = 0
         while i < episodes_count:
-            states_stack, local_counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
+            mdp, states_stack, local_counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
                 exploration_ratio)
@@ -153,15 +154,11 @@ class MonteCarloHelpers:
         while not state.is_terminal():
             states_stack.append(state)
             MonteCarloHelpers.__put_or_add_value_to_dict(counts_dict, state, 1)
-
-            if random.uniform(0, 1) < exploration_ratio:
-                selected_action = state.get_random_action()
-            else:
-                selected_action = policy.get_action(state)
-
+            selected_action = MonteCarloHelpers.__get_action(exploration_ratio, policy, state)
             state, reward = selected_action.to()
             rewards.append(reward)
-        return states_stack, counts_dict, rewards, state
+
+        return policy.mdp, states_stack, counts_dict, rewards, state
 
     @staticmethod
     def __initialize_iteration(mdp):
@@ -171,6 +168,21 @@ class MonteCarloHelpers:
         counts_dict = {}
 
         return state, states_stack, rewards, counts_dict
+
+    @staticmethod
+    def __get_action(exploration_ratio, policy, state):
+        if random.uniform(0, 1) < exploration_ratio:
+            selected_action = state.get_random_action()
+        else:
+            try:
+                selected_action = policy.get_action(state)
+            except StateDiscoveredException:
+                print(f'Discovered State: {state}.')
+                selected_action = state.get_random_action()
+                policy.mdp.add_state(state)
+                if not state.is_terminal():
+                    policy.update_policy(state, state.get_random_action())
+        return selected_action
 
     @staticmethod
     def __put_or_add_value_to_dict(dictionary, key, value):

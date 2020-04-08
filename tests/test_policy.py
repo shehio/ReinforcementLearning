@@ -2,6 +2,7 @@ from src.factories.actionfactory import ActionFactory
 from src.building_blocks.markovdecisionprocess import MarkovDecisionProcess
 from src.building_blocks.policy import Policy
 from src.building_blocks.state import State
+from src.building_blocks.statediscoveredexception import StateDiscoveredException
 
 import numpy as np
 import pytest
@@ -42,9 +43,8 @@ def test_update_policy_with_state_not_in_mdp():
     policy = Policy(mdp)
     state = State('invalid', 0)
     action = ActionFactory.create_action('action', 0, mdp.states[0])
-    with pytest.raises(ValueError) as exception:
+    with pytest.raises(StateDiscoveredException) as exception:
         policy.update_policy(state, action)
-    assert "The mdp for the policy doesn't contain this state." == str(exception.value)
 
 
 # def test_update_policy_with_none_action():

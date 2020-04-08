@@ -1,3 +1,4 @@
+from src.building_blocks.statediscoveredexception import StateDiscoveredException
 from .probabilisticaction import ProbabilisticAction
 from .markovdecisionprocess import MarkovDecisionProcess
 from .state import State
@@ -34,7 +35,7 @@ class Policy:
         if not isinstance(state, State):
             raise TypeError("state has to be of type State.")
         if not self.mdp.contains_state(state):
-            raise ValueError("The mdp for the policy doesn't contain this state.")
+            raise StateDiscoveredException()
 
     @staticmethod
     def __get_state_random_action_entry(state):
