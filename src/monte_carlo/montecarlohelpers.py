@@ -14,14 +14,14 @@ class MonteCarloHelpers:
             mdp: MarkovDecisionProcess,
             discount_factor: float,
             stable_count: int,
-            exploitation_ratio: float,
+            exploration_ratio: float,
             episodes_count: int) -> Policy:
 
         return MonteCarloHelpers.__monte_carlo_control_common(
             mdp,
             MonteCarloHelpers.monte_carlo_policy_evaluation_every_visit,
             discount_factor,
-            exploitation_ratio,
+            exploration_ratio,
             stable_count,
             episodes_count)
 
@@ -30,14 +30,14 @@ class MonteCarloHelpers:
             mdp: MarkovDecisionProcess,
             discount_factor: float,
             stable_count: int,
-            exploitation_ratio: float,
+            exploration_ratio: float,
             episodes_count: int) -> Policy:
 
         return MonteCarloHelpers.__monte_carlo_control_common(
             mdp,
             MonteCarloHelpers.monte_carlo_policy_evaluation_first_visit,
             discount_factor,
-            exploitation_ratio,
+            exploration_ratio,
             stable_count,
             episodes_count)
 
@@ -46,7 +46,7 @@ class MonteCarloHelpers:
             mdp: MarkovDecisionProcess,
             policy: Policy,
             discount_factor: float,
-            exploitation_ratio: float,
+            exploration_ratio: float,
             episodes_count: int) -> MarkovDecisionProcess:
 
         global_counts_dict = {}
@@ -56,7 +56,7 @@ class MonteCarloHelpers:
             states_stack, counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
-                exploitation_ratio)
+                exploration_ratio)
             terminal_reward = terminal_state.updated_value
             MonteCarloHelpers.__absorb_dict(global_counts_dict, counts_dict)
 
@@ -77,7 +77,7 @@ class MonteCarloHelpers:
             mdp: MarkovDecisionProcess,
             policy: Policy,
             discount_factor: float,
-            exploitation_ratio: float,
+            exploration_ratio: float,
             episodes_count: int) -> MarkovDecisionProcess:
 
         global_counts_dict = {}
@@ -88,7 +88,7 @@ class MonteCarloHelpers:
             states_stack, local_counts_dict, rewards, terminal_state = MonteCarloHelpers.__perform_episode(
                 mdp,
                 policy,
-                exploitation_ratio)
+                exploration_ratio)
             terminal_reward = terminal_state.updated_value
 
             while len(states_stack) > 0:
@@ -116,7 +116,7 @@ class MonteCarloHelpers:
             mdp,
             policy_evaluation_method,
             discount_factor,
-            exploitation_ratio,
+            exploration_ratio,
             stable_count,
             episodes_count):
         old_policy = Policy(mdp)
@@ -127,7 +127,7 @@ class MonteCarloHelpers:
                 mdp,
                 old_policy,
                 discount_factor,
-                exploitation_ratio,
+                exploration_ratio,
                 episodes_count)
             new_policy = QFunctionHelpers.get_policy_using_max_qfunction_from_mdp(mdp, discount_factor)
             if PolicyHelpers.are_similar(old_policy, new_policy):
@@ -148,18 +148,18 @@ class MonteCarloHelpers:
     # finish the episode. Another solution is to limit the number of states we visit per episode (in case the policy
     # has us stuck).
     @staticmethod
-    def __perform_episode(mdp, policy, exploitation_ratio):
+    def __perform_episode(mdp, policy, exploration_ratio):
         state, states_stack, rewards, counts_dict = MonteCarloHelpers.__initialize_iteration(mdp)
         while not state.is_terminal():
             states_stack.append(state)
             MonteCarloHelpers.__put_or_add_value_to_dict(counts_dict, state, 1)
 
-            if random.uniform(0, 1) > exploitation_ratio:
-                action_from_policy = state.get_random_action()
+            if random.uniform(0, 1) < exploration_ratio:
+                selected_action = state.get_random_action()
             else:
-                action_from_policy = policy.get_action(state)
+                selected_action = policy.get_action(state)
 
-            state, reward = action_from_policy.to()
+            state, reward = selected_action.to()
             rewards.append(reward)
         return states_stack, counts_dict, rewards, state
 

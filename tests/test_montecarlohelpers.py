@@ -25,17 +25,14 @@ def test_monte_carlo_control_first_visit():
 def __test_monte_carlo_prediction(lambda_definition):
     mdp = GridWorld.get_game()
     policy = __create_expected_policy(mdp)
-    discount_factor = 0.9
-    exploitation_ratio = 1
-    simulation_count = 50000
     expected_value_function = __create_expected_value_function(mdp)
 
     mdp = lambda_definition(
         mdp,
         policy,
-        discount_factor,
-        exploitation_ratio,
-        simulation_count)
+        discount_factor=0.9,
+        exploration_ratio=0,
+        episodes_count=50000)
     actual_value_function = ValueFunctionHelpers.get_value_function(mdp)
 
     tolerance = 2  # Not based on any statistical analysis
@@ -54,7 +51,7 @@ def __test_monte_carlo_control(lambda_definition):
         mdp=mdp,
         discount_factor=0.9,
         stable_count=3,
-        exploitation_ratio=0.9,
+        exploration_ratio=0.1,
         episodes_count=1000)
 
     for state in actual_policy.policy_dict.keys():
