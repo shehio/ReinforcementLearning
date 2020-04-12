@@ -17,11 +17,10 @@ class ValueFunctionHelpers:
     def value_iteration(
             mdp: MarkovDecisionProcess,
             discount_factor: float,
-            iterations: 100,
-            epsilon: 0.05):
+            iterations: int = 100,
+            epsilon: float = 0.05):
         prev_value_function = ValueFunctionHelpers.get_value_function(mdp)
         value_function_diff = float("inf")
-        terminal_states = mdp.terminal_states()
         i = 0
 
         while i < iterations and value_function_diff > epsilon:

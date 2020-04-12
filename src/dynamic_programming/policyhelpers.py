@@ -54,7 +54,7 @@ class PolicyHelpers:
         return policy, mdp
 
     @staticmethod  # @Todo: Refactor this with the similar code in valuefunctionhelpers.
-    def evaluate_policy(mdp: MarkovDecisionProcess, policy: Policy, discount_factor, epsilon: 0.05):
+    def evaluate_policy(mdp: MarkovDecisionProcess, policy: Policy, discount_factor: float, epsilon: float = 0.05):
         PolicyHelpers.__validate_input(policy, discount_factor)
 
         prev_value_function = PolicyHelpers.__get_value_function_from_policy(mdp, policy, discount_factor)

@@ -4,3 +4,5 @@ venv/
 __pycache__/
 .tox/
 UNKNOWN.egg-info/
+.mypy_cache/
+ src/.mypy_cache/

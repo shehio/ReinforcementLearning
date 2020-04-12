@@ -70,7 +70,7 @@ class QFunctionHelpers:
     def __get_qvalues(discount_factor: float, state_actions_tuple):
         state = state_actions_tuple[0]
         actions = state_actions_tuple[1]
-        state_action_values = {state: {}}
+        state_action_values: dict = {state: {}}
 
         for action in actions:
             state_action_values[state][action] = action.get_value(discount_factor)
